@@ -1,0 +1,12 @@
+{
+  "targetGroups": [
+    { "name": "php-blue-tg" },
+    { "name": "php-green-tg" }
+  ],
+  "prodTrafficRoute": {
+    "listenerArns": [ "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/934a79bf908c07f7" ]
+  },
+  "testTrafficRoute": {
+    "listenerArns": [ "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/3bc9175f738875ad" ]
+  }
+}
