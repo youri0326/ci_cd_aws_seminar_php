@@ -1,12 +1,45 @@
 {
-  "targetGroups": [
-    { "name": "php-blue-tg" },
-    { "name": "php-green-tg" }
-  ],
-  "prodTrafficRoute": {
-    "listenerArns": [ "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/934a79bf908c07f7" ]
+  "applicationName": "cicd-aws-codedeploy-php-yoshiike-20251019",
+  "deploymentGroupName": "cicd-aws-codedeploy-php-group",
+  "serviceRoleArn": "arn:aws:iam::963220189927:role/CodeDeployServiceRole-yoshiike-20251019",
+  "deploymentStyle": {
+    "deploymentType": "BLUE_GREEN",
+    "deploymentOption": "WITH_TRAFFIC_CONTROL"
   },
-  "testTrafficRoute": {
-    "listenerArns": [ "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/3bc9175f738875ad" ]
+  "blueGreenDeploymentConfiguration": {
+    "terminateBlueInstancesOnDeploymentSuccess": {
+      "action": "TERMINATE",
+      "terminationWaitTimeInMinutes": 1
+    },
+    "deploymentReadyOption": {
+      "actionOnTimeout": "CONTINUE_DEPLOYMENT",
+      "waitTimeInMinutes": 0
+    }
+  },  
+  "ecsServices": [
+    {
+      "clusterName": "ecs-cluster-yoshiike-20251019",
+      "serviceName": "php-service-yoshiike-20251019"
+    }
+  ],
+  "loadBalancerInfo": {
+    "targetGroupPairInfoList": [
+      {
+        "prodTrafficRoute": {
+          "listenerArns": [
+            "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/934a79bf908c07f7"
+          ]
+        },
+        "testTrafficRoute": {
+          "listenerArns": [
+            "arn:aws:elasticloadbalancing:ap-northeast-1:963220189927:listener/app/alb-yoshiike-20251019/75bf2f259cc2eb46/3bc9175f738875ad"
+          ]
+        },
+        "targetGroups": [
+          { "name": "php-blue-tg-20251019" },
+          { "name": "php-green-tg-20251019" }
+        ]
+      }
+    ]
   }
 }

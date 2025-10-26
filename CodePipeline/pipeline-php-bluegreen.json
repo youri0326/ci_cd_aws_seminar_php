@@ -19,7 +19,7 @@
               "version": "1"
             },
             "configuration": {
-              "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:963220189927:connection/arn:aws:codestar-connections:ap-northeast-1:963220189927:connection/17ba20dc-2e1b-42a2-bdf8-cdafc83e3255",
+              "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:963220189927:connection/17ba20dc-2e1b-42a2-bdf8-cdafc83e3255",
               "FullRepositoryId": "youri0326/ci_cd_aws_seminar_php",
               "BranchName": "main"
             },
