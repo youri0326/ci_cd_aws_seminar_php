@@ -18,12 +18,12 @@ phases:
   build:
     commands:
       - echo Build Docker image for php...
-        docker build \
+      - docker build \
           --build-arg ACCOUNT_ID=$ACCOUNT_ID \
           --build-arg REGION=$AWS_DEFAULT_REGION \
           --build-arg ECR_REPO_PHP_Apache=$ECR_REPO_PHP_Apache \
           -t $ECR_REPO_PHP:latest ./app      
-      - docker tag $ECR_REPO_PHP:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/$ECR_REPO_PHP:latest
+      - docker tag $ECR_REPO_PHP:latest $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest
 
   post_build:
     commands:
