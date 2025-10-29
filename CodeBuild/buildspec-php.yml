@@ -29,29 +29,30 @@ phases:
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest
 
       - echo "Generate taskdef-php.json..."
-      - printf '{
-          "family": "%s",
+      - |
+        cat <<EOF > taskdef-php.json
+        {
+          "family": "${TASK_FAMILY}",
           "networkMode": "awsvpc",
           "requiresCompatibilities": ["FARGATE"],
           "cpu": "256",
           "memory": "512",
-          "executionRoleArn": "arn:aws:iam::%s:role/ecsTaskExecutionRole",
+          "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/ecsTaskExecutionRole",
           "containerDefinitions": [
             {
-              "name": "%s",
-              "image": "%s.dkr.ecr.%s.amazonaws.com/%s:latest",
+              "name": "${CONTAINER_NAME}",
+              "image": "${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_PHP}:latest",
               "portMappings": [
                 {
-                  "containerPort": %s,
+                  "containerPort": ${CONTAINER_PORT},
                   "protocol": "tcp"
                 }
               ],
               "essential": true
             }
           ]
-        }' \
-        $TASK_FAMILY $ACCOUNT_ID $CONTAINER_NAME $ACCOUNT_ID $AWS_DEFAULT_REGION $ECR_REPO_PHP $CONTAINER_PORT > taskdef-php.json
-
+        }
+        EOF
       - echo "Copy appspec-php.yaml..."
       - cp appspec-php.yaml ./ # appspecファイルをビルド成果物に含める
 
