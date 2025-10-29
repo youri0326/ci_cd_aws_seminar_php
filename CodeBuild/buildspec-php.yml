@@ -4,7 +4,8 @@ env:
   variables:
     AWS_DEFAULT_REGION: "ap-northeast-1"
     ACCOUNT_ID: "963220189927"
-    ECR_REPO: "ecr-php-yoshiike-20251019"
+    ECR_REPO_PHP: "ecr-php-yoshiike-20251019"
+    ECR_REPO_PHP_Apache: "ecr-php-apache-yoshiike-20251019"
     CONTAINER_NAME: "php"
 
 phases:
@@ -17,14 +18,18 @@ phases:
   build:
     commands:
       - echo Build Docker image for php...
-      - docker build -t $ECR_REPO:latest ./app
-      - docker tag $ECR_REPO:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/$ECR_REPO:latest
+        docker build \
+          --build-arg ACCOUNT_ID=$ACCOUNT_ID \
+          --build-arg REGION=$AWS_DEFAULT_REGION \
+          --build-arg ECR_REPO_PHP_Apache=$ECR_REPO_PHP_Apache \
+          -t $ECR_REPO_PHP:latest ./app      
+      - docker tag $ECR_REPO_PHP:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/$ECR_REPO_PHP:latest
 
   post_build:
     commands:
       - echo "start to push"
-      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO:latest
-      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO:latest > imagedefinitions.json
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest > imagedefinitions.json
 
 artifacts:
   files:
