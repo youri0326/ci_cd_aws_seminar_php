@@ -7,6 +7,8 @@ env:
     ECR_REPO_PHP: "ecr-php-yoshiike-20251019"
     ECR_REPO_PHP_Apache: "ecr-php-apache-yoshiike-20251019"
     CONTAINER_NAME: "php"
+    TASK_FAMILY: "task-php-yoshiike-20251019"
+    CONTAINER_PORT: "80"
 
 phases:
 
@@ -23,11 +25,40 @@ phases:
 
   post_build:
     commands:
-      - echo "start to push"
+      - echo "Push Docker image to ECR..."
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest
-      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_PHP:latest > imagedefinitions.json
+
+      - echo "Generate taskdef-php.json..."
+      - printf '{
+          "family": "%s",
+          "networkMode": "awsvpc",
+          "requiresCompatibilities": ["FARGATE"],
+          "cpu": "256",
+          "memory": "512",
+          "executionRoleArn": "arn:aws:iam::%s:role/ecsTaskExecutionRole",
+          "containerDefinitions": [
+            {
+              "name": "%s",
+              "image": "%s.dkr.ecr.%s.amazonaws.com/%s:latest",
+              "portMappings": [
+                {
+                  "containerPort": %s,
+                  "protocol": "tcp"
+                }
+              ],
+              "essential": true
+            }
+          ]
+        }' \
+        $TASK_FAMILY $ACCOUNT_ID $CONTAINER_NAME $ACCOUNT_ID $AWS_DEFAULT_REGION $ECR_REPO_PHP $CONTAINER_PORT > taskdef-php.json
+
+      - echo "Copy appspec-php.yaml..."
+      - cp appspec-php.yaml ./ # appspecファイルをビルド成果物に含める
+
+      - echo "Generated files:"
+      - ls -l
 
 artifacts:
   files:
-    - imagedefinitions.json
-
+    - taskdef-php.json
+    - appspec-php.yaml
