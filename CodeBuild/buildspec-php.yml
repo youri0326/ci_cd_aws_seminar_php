@@ -54,7 +54,7 @@ phases:
         }
         EOF
       - echo "Copy appspec-php.yaml..."
-      - cp ./CodeDeploy/appspec-php.yaml ./ # appspecファイルをビルド成果物に含める
+      - cp CodeDeploy/appspec-php.yaml ./ # appspecファイルをビルド成果物に含める
 
       - echo "Generated files:"
       - ls -l
