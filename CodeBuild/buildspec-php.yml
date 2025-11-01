@@ -37,7 +37,7 @@ phases:
           "requiresCompatibilities": ["FARGATE"],
           "cpu": "256",
           "memory": "512",
-          "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/ecsTaskExecutionRole",
+          "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/TaskExecutionRole-yoshiike-20251019",
           "containerDefinitions": [
             {
               "name": "${CONTAINER_NAME}",
@@ -60,6 +60,7 @@ phases:
       - ls -l
 
 artifacts:
+  type: zip
   files:
     - taskdef-php.json
     - appspec-php.yaml
