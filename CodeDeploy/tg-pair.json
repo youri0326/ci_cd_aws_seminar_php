@@ -36,8 +36,8 @@
           ]
         },
         "targetGroups": [
-          { "name": "php-blue-tg-20251019" },
-          { "name": "php-green-tg-20251019" }
+          { "name": "php-blue-tg-yoshiike-20251019" },
+          { "name": "php-green-tg-yoshiike-20251019" }
         ]
       }
     ]

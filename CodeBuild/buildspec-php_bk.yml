@@ -9,7 +9,6 @@ env:
     CONTAINER_NAME: "php"
     TASK_FAMILY: "task-php-yoshiike-20251019"
     CONTAINER_PORT: "80"
-    TASK_ROLE: "TaskExecutionRole-yoshiike-20251019"
 
 phases:
 
@@ -38,7 +37,7 @@ phases:
           "requiresCompatibilities": ["FARGATE"],
           "cpu": "512",
           "memory": "1024",
-          "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/${TASK_ROLE}",
+          "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/TaskExecutionRole-yoshiike-20251019",
           "containerDefinitions": [
             {
               "name": "${CONTAINER_NAME}",
@@ -46,6 +45,10 @@ phases:
               "portMappings": [
                 {
                   "containerPort": ${CONTAINER_PORT},
+                  "protocol": "tcp"
+                },
+                {
+                  "containerPort": 9000,
                   "protocol": "tcp"
                 }
               ],
