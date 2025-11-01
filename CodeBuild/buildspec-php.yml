@@ -64,5 +64,5 @@ phases:
 artifacts:
   type: zip
   files:
-    - taskdef-php.json
-    - appspec-php.yaml
+    - ECS/taskdef-php.json
+    - CodeDeploy/appspec-php.yaml
