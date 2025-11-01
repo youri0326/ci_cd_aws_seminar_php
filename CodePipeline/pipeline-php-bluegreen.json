@@ -70,9 +70,9 @@
               "ApplicationName": "cicd-aws-codedeploy-php-yoshiike-20251019",
               "DeploymentGroupName": "cicd-aws-codedeploy-php-group",
               "AppSpecTemplateArtifact": "BuildOutput",
-              "AppSpecTemplatePath": "./appspec-php.yaml",
+              "AppSpecTemplatePath": "appspec-php.yaml",
               "TaskDefinitionTemplateArtifact": "BuildOutput",
-              "TaskDefinitionTemplatePath": "./taskdef-php.json"
+              "TaskDefinitionTemplatePath": "taskdef-php.json"
             }
           }
         ]
