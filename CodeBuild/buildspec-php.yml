@@ -54,7 +54,7 @@ phases:
           ]
         }
         EOF
-      - echo "Copy appspec-php.yaml..."
+      - echo "Copy appspec-php.yaml.."
       - ls -l CodeDeploy/
       - pwd
       - cp CodeDeploy/appspec-php.yaml ./ # appspecファイルをビルド成果物に含める
@@ -64,5 +64,5 @@ phases:
 artifacts:
   type: zip
   files:
-    - ECS/taskdef-php.json
-    - CodeDeploy/appspec-php.yaml
+    - taskdef-php.json
+    - appspec-php.yaml
