@@ -4,7 +4,7 @@
     "roleArn": "arn:aws:iam::963220189927:role/CodePipelineServiceRole-yoshiike-20251019",
     "artifactStore": {
       "type": "S3",
-      "location": "codepipeline-artifact-yoshiike-20251019"
+      "location": "cicd-yoshiike-20251019"
     },
     "stages": [
       {
@@ -24,7 +24,7 @@
               "BranchName": "main"
             },
             "outputArtifacts": [
-              { "name": "SourceOutput" }
+              { "name": "SourceOut" }
             ]
           }
         ]
@@ -44,10 +44,10 @@
               "ProjectName": "php-build-yoshiike-20251019"
             },
             "inputArtifacts": [
-              { "name": "SourceOutput" }
+              { "name": "SourceOut" }
             ],
             "outputArtifacts": [
-              { "name": "BuildOutput" }
+              { "name": "BuildOut" }
             ]
           }
         ]
@@ -64,14 +64,14 @@
               "version": "1"
             },
             "inputArtifacts": [
-              { "name": "BuildOutput" }
+              { "name": "BuildOut" }
             ],
             "configuration": {
               "ApplicationName": "cicd-aws-codedeploy-php-yoshiike-20251019",
               "DeploymentGroupName": "cicd-aws-codedeploy-php-group",
-              "AppSpecTemplateArtifact": "BuildOutput",
+              "AppSpecTemplateArtifact": "BuildOut",
               "AppSpecTemplatePath": "appspec-php.yml",
-              "TaskDefinitionTemplateArtifact": "BuildOutput",
+              "TaskDefinitionTemplateArtifact": "BuildOut",
               "TaskDefinitionTemplatePath": "taskdef-php.json"
             }
           }
