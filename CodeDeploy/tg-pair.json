@@ -41,10 +41,5 @@
         ]
       }
     ]
-  },
-  "cloudWatchLogConfiguration": {
-    "enabled": true,
-    "logGroupName": "/aws/codedeploy/cicd-aws-codedeploy-php-yoshiike-20251019",
-    "logStreamNamePrefix": "codedeploy-log-stream"
   }
 }
