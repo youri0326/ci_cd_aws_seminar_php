@@ -54,14 +54,14 @@ phases:
           ]
         }
         EOF
-      - echo "Copy appspec-php.yml.."
+      - echo "Copy appspec.yml.."
       - ls -l CodeDeploy/
       - pwd
-      - cp CodeDeploy/appspec-php.yml ./ # appspecファイルをビルド成果物に含める
+      - cp CodeDeploy/appspec.yml ./ # appspecファイルをビルド成果物に含める
       - echo "Generated files:"
       - ls -l
 
 artifacts:
   files:
     - taskdef-php.json
-    - appspec-php.yml
+    - appspec.yml
