@@ -1,0 +1,13 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        # 【重要】デプロイ対象のクラスタ名とサービス名を明記
+        Cluster: "ecs-cluster-yoshiike-20251019"
+        Service: "php-service-yoshiike-20251019"
+        TaskDefinition: "taskdef-php.json"
+        LoadBalancerInfo:
+          ContainerName: "php"
+          ContainerPort: 80
+
