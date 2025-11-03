@@ -19,6 +19,14 @@ git remote add origin git@github.com:youri0326/ci_cd_aws_seminar_php.git
 git push -u origin main
 
 # ------------------------------
+# 改行コードのLFに固定
+# ------------------------------
+sudo apt update
+sudo apt install dos2unix
+
+dos2unix /mnt/c/cicd_aws_seminar/php-cicd/CodeDeploy/appspec.yml
+
+# ------------------------------
 # 既存ファイルをコピー
 # ------------------------------
 cp -r /mnt/c/cicd_aws_seminar/php-cicd/* /mnt/c/ci_cd_aws_seminar_php
@@ -66,3 +74,13 @@ aws codepipeline create-pipeline \
   --region ${REGION}
 
 echo "=== すべてのセットアップが完了しました ==="
+
+aws deploy create-deployment-group   --cli-input-json file://CodeDeploy/tg-pair.json   --region ap-northeast-1
+
+aws codebuild delete-project \
+  --name php-build-yoshiike-20251019 \
+  --region ${REGION}
+
+aws deploy delete-application \
+  --application-name cicd-aws-codedeploy-php-yoshiike-20251019 \
+  --region ${REGION}

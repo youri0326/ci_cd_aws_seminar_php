@@ -10,6 +10,7 @@ env:
     TASK_FAMILY: "task-php-yoshiike-20251019"
     CONTAINER_PORT: "80"
     TASK_ROLE: "TaskExecutionRole-yoshiike-20251019"
+    RDS_ENDPOINT: "db-yoshiike-20251019.czhvr9mxqrfq.ap-northeast-1.rds.amazonaws.com"
 
 phases:
 
@@ -49,7 +50,13 @@ phases:
                   "protocol": "tcp"
                 }
               ],
-              "essential": true
+              "essential": true,
+              "environment": [
+                { "name": "DB_HOST", "value": "${RDS_ENDPOINT}" },
+                { "name": "DB_USER", "value": "root" },
+                { "name": "DB_PASS", "value": "root1234" },
+                { "name": "DB_NAME", "value": "sampledb" }
+              ]
             }
           ]
         }
