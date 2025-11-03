@@ -7,15 +7,5 @@ Resources:
         LoadBalancerInfo:
           ContainerName: "php"
           ContainerPort: 80
-        TargetGroupPairInfoList:
-          - ProdTrafficRoute:
-              Type: ApplicationLoadBalancer
-              LogicalID: blueTargetGroup
-            TestTrafficRoute:
-              Type: ApplicationLoadBalancer
-              LogicalID: greenTargetGroup
-            TargetGroups:
-              - Name: php-blue-tg-yoshiike-20251019
-              - Name: php-green-tg-yoshiike-20251019
 
 
