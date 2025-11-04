@@ -6,10 +6,10 @@ $pass = getenv('DB_PASS');
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+    // 出力結果
     echo "DB接続成功！<br>";
-
-
-    
+    //継続的デプロイを確認するための出力
+    echo "継続的デプロイの成功！<br>";
     // データ取得
     $stmt = $pdo->query("SELECT * FROM users");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

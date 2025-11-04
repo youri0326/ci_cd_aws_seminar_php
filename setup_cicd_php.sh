@@ -75,7 +75,106 @@ aws codepipeline create-pipeline \
 
 echo "=== すべてのセットアップが完了しました ==="
 
-aws deploy create-deployment-group   --cli-input-json file://CodeDeploy/tg-pair.json   --region ap-northeast-1
+# ------------------------------
+# 動作確認①デプロイ情報の成否の確認
+# ------------------------------
+#
+# 最新デプロイ情報を取得
+DEPLOY_ID=$(aws deploy list-deployments \
+    --application-name cicd-aws-codedeploy-php-yoshiike-20251019 \
+    --deployment-group-name cicd-aws-codedeploy-php-group \
+    --query 'deployments[0]' \
+    --output text)
+echo "上で取得したデプロイID:"${DEPLOY_ID}
+
+aws deploy get-deployment \
+    --deployment-id $DEPLOY_ID \
+    --query '{Status:deploymentInfo.status,TrafficShiftCompleted:deploymentInfo.completeTime}' \
+    --output table
+
+# ------------------------------
+# 動作確認②ECSのrunningの確認
+# ------------------------------
+# サービスに紐付くタスク一覧
+TASK_ARN=$(aws ecs list-tasks \
+    --cluster ecs-cluster-yoshiike-20251019 \
+    --service-name php-service-yoshiike-20251019 \
+    --region ap-northeast-1 \
+    --query 'taskArns' \
+    --output text)
+# タスク詳細を取得
+echo "上で取得したタスク定義ARN:"${TASK_ARN}
+
+aws ecs describe-tasks \
+    --cluster ecs-cluster-yoshiike-20251019 \
+    --tasks $TASK_ARN \
+    --region ap-northeast-1 \
+    --query 'tasks[0].containers[0].[name, lastStatus, taskDefinitionArn]' \
+    --output table
+
+# ------------------------------
+# 動作確認③ターゲットグループのヘルスチェック
+# ------------------------------
+# ターゲットグループのヘルスチェック状況
+# リージョンを指定
+REGION="ap-northeast-1"
+
+# BlueターゲットグループARNを取得
+BLUE_TG_ARN=$(aws elbv2 describe-target-groups \
+  --names php-blue-tg-yoshiike-20251019 \
+  --region $REGION \
+  --query 'TargetGroups[0].TargetGroupArn' \
+  --output text)
+
+echo "BlueターゲットグループARN:"${BLUE_TG_ARN}
+
+
+# GreenターゲットグループARNを取得
+GRENN_TG_ARN=$(aws elbv2 describe-target-groups \
+  --names php-green-tg-yoshiike-20251019 \
+  --region $REGION \
+  --query 'TargetGroups[0].TargetGroupArn' \
+  --output text)
+
+echo "GreenターゲットグループARN:"${GREEN_TG_ARN}
+
+
+aws elbv2 describe-target-health \
+    --target-group-arn ${BLUE_TG_ARN} \
+    --query 'TargetHealthDescriptions[*].[Target.Id,TargetHealth.State]' \
+    --output table
+
+aws elbv2 describe-target-health \
+    --target-group-arn ${GRENN_TG_ARN} \
+    --query 'TargetHealthDescriptions[*].[Target.Id,TargetHealth.State]' \
+    --output table
+
+# ------------------------------
+# 動作確認④ブラウザで動作確認
+# ------------------------------
+php_alb_dns=$(aws elbv2 describe-load-balancers \
+    --names alb-yoshiike-20251019 \
+    --query 'LoadBalancers[0].DNSName' \
+    --output text)
+URL="http://"${php_alb_dns}
+echo "URLにアクセス:"${URL}
+
+
+# ------------------------------
+# 動作確認⑤継続的デプロイの確認
+# -----------------------------
+#①index.phpの修正 10行目に「echo "継続的デプロイの成功！<br>";」を追記-
+
+#GITHUBへのプッシュ
+cp -r /mnt/c/cicd_aws_seminar/php-cicd/* /mnt/c/ci_cd_aws_seminar_php
+git add .
+git commit -m "Add initial project files for CI/CD setup"
+git push origin main
+
+
+# ------------------------------
+# 削除
+# -----------------------------
 
 aws codebuild delete-project \
   --name php-build-yoshiike-20251019 \
