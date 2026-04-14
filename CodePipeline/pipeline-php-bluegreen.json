@@ -1,0 +1,83 @@
+{
+  "pipeline": {
+    "name": "php-pipeline-bluegreen-yoshiike-0413",
+    "roleArn": "arn:aws:iam::527151769671:role/CodePipelineServiceRole-yoshiike-0413",
+    "artifactStore": {
+      "type": "S3",
+      "location": "cicd-yoshiike-0413"
+    },
+    "stages": [
+      {
+        "name": "Source",
+        "actions": [
+          {
+            "name": "Source",
+            "actionTypeId": {
+              "category": "Source",
+              "owner": "AWS",
+              "provider": "CodeStarSourceConnection",
+              "version": "1"
+            },
+            "configuration": {
+              "ConnectionArn": "arn:aws:codestar-connections:ap-northeast-1:527151769671:connection/f70f1dd1-077e-4d9e-8a02-3690a82df423",
+              "FullRepositoryId": "youri0326/ci_cd_aws_seminar_php",
+              "BranchName": "main"
+            },
+            "outputArtifacts": [
+              { "name": "SourceOut" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Build",
+        "actions": [
+          {
+            "name": "Build",
+            "actionTypeId": {
+              "category": "Build",
+              "owner": "AWS",
+              "provider": "CodeBuild",
+              "version": "1"
+            },
+            "configuration": {
+              "ProjectName": "php-build-yoshiike-0413"
+            },
+            "inputArtifacts": [
+              { "name": "SourceOut" }
+            ],
+            "outputArtifacts": [
+              { "name": "BuildOut" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Deploy",
+        "actions": [
+          {
+            "name": "CodeDeployAction",
+            "actionTypeId": {
+              "category": "Deploy",
+              "owner": "AWS",
+              "provider": "CodeDeployToECS",
+              "version": "1"
+            },
+            "inputArtifacts": [
+              { "name": "BuildOut" }
+            ],
+            "configuration": {
+              "ApplicationName": "cicd-aws-codedeploy-php-yoshiike-0413",
+              "DeploymentGroupName": "cicd-aws-codedeploy-php-group",
+              "AppSpecTemplateArtifact": "BuildOut",
+              "AppSpecTemplatePath": "appspec.yml",
+              "TaskDefinitionTemplateArtifact": "BuildOut",
+              "TaskDefinitionTemplatePath": "taskdef-php.json"
+            }
+          }
+        ]
+      }
+    ],
+    "version": 1
+  }
+}
